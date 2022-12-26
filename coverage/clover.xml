@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1671521739880" clover="3.2.0">
+  <project timestamp="1671521739880" name="All files">
+    <metrics statements="75" coveredstatements="20" conditionals="23" coveredconditionals="0" methods="33" coveredmethods="7" elements="131" coveredelements="27" complexity="0" loc="75" ncloc="75" packages="7" files="14" classes="14"/>
+    <package name="components">
+      <metrics statements="9" coveredstatements="0" conditionals="17" coveredconditionals="0" methods="6" coveredmethods="0"/>
+      <file name="form.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/components/form.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+      <file name="loading.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/components/loading.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+      <file name="order_summary.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/components/order_summary.tsx">
+        <metrics statements="5" coveredstatements="0" conditionals="3" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+      </file>
+      <file name="order_summary_item.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/components/order_summary_item.tsx">
+        <metrics statements="2" coveredstatements="0" conditionals="14" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="layouts">
+      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="Meta.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/layouts/Meta.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="13" count="3" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="66" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages">
+      <metrics statements="33" coveredstatements="9" conditionals="2" coveredconditionals="0" methods="11" coveredmethods="3"/>
+      <file name="[slug].tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/pages/[slug].tsx">
+        <metrics statements="19" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="97" count="0" type="stmt"/>
+        <line num="104" count="0" type="stmt"/>
+      </file>
+      <file name="about.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/pages/about.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+      </file>
+      <file name="blog.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/pages/blog.tsx">
+        <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+      </file>
+      <file name="index.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/pages/index.tsx">
+        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="186" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.blog">
+      <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <file name="[slug].tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/pages/blog/[slug].tsx">
+        <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="0"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="providers">
+      <metrics statements="11" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="0"/>
+      <file name="ThemeProvider.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/providers/ThemeProvider.tsx">
+        <metrics statements="11" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="templates">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="Main.tsx" path="/Users/ali/Sites/Next-js-Boilerplate/src/templates/Main.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="69" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="3" coveredstatements="1" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="1"/>
+      <file name="AppConfig.ts" path="/Users/ali/Sites/Next-js-Boilerplate/src/utils/AppConfig.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="10" type="stmt"/>
+      </file>
+      <file name="product.ts" path="/Users/ali/Sites/Next-js-Boilerplate/src/utils/product.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

@@ -1,0 +1,15 @@
+@tailwind base;
+
+a {
+  @apply text-blue-700; /*put primary color here*/
+}
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+
+.content ul {
+  @apply my-6;
+}

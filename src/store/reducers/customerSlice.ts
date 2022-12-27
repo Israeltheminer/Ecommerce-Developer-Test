@@ -16,6 +16,7 @@ interface ContactInfo {
 	email: string
 	keepUpToDate: boolean
 	password: string
+	isRegistered: boolean
 }
 interface CustomerState {
 	contactInformation: ContactInfo
@@ -25,8 +26,9 @@ interface CustomerState {
 const initialState: CustomerState = {
 	contactInformation: {
 		email: "",
-		keepUpToDate: false,
-		password: ""
+		password: "",
+		isRegistered: false,
+		keepUpToDate: false
 	},
 	shippingInformation: {
 		firstname: "",
@@ -51,10 +53,13 @@ const customerSlice = createSlice({
 		},
 		setShippingInformation(state: CustomerState, action: PayloadAction<ShippingInfo>) {
 			state.shippingInformation = action.payload
+		},
+		setAsRegistered(state: CustomerState) {
+			state.contactInformation.isRegistered = true
 		}
 	}
 })
 
-export const { setContactInformation, setShippingInformation } = customerSlice.actions
+export const { setContactInformation, setShippingInformation, setAsRegistered } = customerSlice.actions
 
 export default customerSlice.reducer

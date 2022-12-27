@@ -1,15 +1,51 @@
 @tailwind base;
 
 a {
-  @apply text-blue-700; /*put primary color here*/
+	@apply text-blue-700; /*put primary color here*/
 }
 
 @tailwind components;
 
 @tailwind utilities;
 
-
-
 .content ul {
-  @apply my-6;
+	@apply my-6;
+}
+
+.base-input {
+	outline: rgb(103, 103, 103);
+	border-radius: 4px;
+	padding: 10px 14px;
+	font-size: 16px;
+	height: 48px;
+	border: 1px solid #ced4da;
+	min-width: 130px;
+}
+.base-input::placeholder {
+	color: #9ea1a3;
+	font-size: 14px;
+}
+[type="radio"] {
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0.2rem solid #fff;
+	background-color: #fff;
+	border-radius: 50%;
+	height: 1.25rem;
+	width: 1.25rem;
+	cursor: pointer;
+	box-shadow: 0 0 0 1px #999;
+}
+[type="radio"]:focus-visible {
+	outline-offset: 0;
+}
+[type="radio"]:hover {
+	border-width: 0;
+	background-color: #dbdbdbc1;
+}
+[type="radio"]:checked {
+	box-shadow: 0 0 0 1px #252623;
+	border-color: #fff;
+	background-color: #252623;
+	border-width: 0.325rem;
 }

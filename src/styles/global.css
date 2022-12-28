@@ -25,7 +25,7 @@ a {
 	color: #9ea1a3;
 	font-size: 14px;
 }
-[type="radio"] {
+.dark-radio-input {
 	appearance: none;
 	-webkit-appearance: none;
 	border: 0.2rem solid #fff;
@@ -36,16 +36,41 @@ a {
 	cursor: pointer;
 	box-shadow: 0 0 0 1px #999;
 }
-[type="radio"]:focus-visible {
+.dark-radio-input:focus-visible {
 	outline-offset: 0;
 }
-[type="radio"]:hover {
+.dark-radio-input:hover {
 	border-width: 0;
 	background-color: #dbdbdbc1;
 }
-[type="radio"]:checked {
+.dark-radio-input:checked {
 	box-shadow: 0 0 0 1px #252623;
 	border-color: #fff;
 	background-color: #252623;
 	border-width: 0.325rem;
+}
+.gold-radio-input {
+	appearance: none;
+	-webkit-appearance: none;
+	border-radius: 50%;
+	height: 1.25rem;
+	width: 1.25rem;
+	cursor: pointer;
+	box-shadow: 0 0 0 2px #262325;
+	background-color: #f0e9e26e;
+}
+.gold-radio-input:focus-visible {
+	outline-offset: 0;
+}
+.gold-radio-input:hover {
+	border-width: 0;
+	background-color: #b0ada984;
+}
+.gold-radio-input:checked {
+	background-color: #fff;
+	background-image: url("/assets/images/gold-mark.svg");
+	background-size: 90%;
+	border-width: 0;
+	background-position: center;
+	box-shadow: 0 0 0 2px #fff;
 }

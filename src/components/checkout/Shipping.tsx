@@ -3,61 +3,22 @@ import { RootState } from '@/store/reducers'
 import { setCheckoutStage } from "@/store/reducers/checkoutSlice"
 import { setEmail, setInstructions } from "@/store/reducers/shippingSlice"
 import { changeShipping } from "@/store/reducers/orderSlice"
-import { Current, Processed } from "@/components/checkout/StatusBar"
-import { useEffect, useState } from "react"
+import { Current } from "@/components/checkout/StatusBar"
+import { useEffect } from "react"
+import CustomerInfo from "./CustomerInfo"
 
 const Shipping = () => {
    const dispatch = useDispatch()
-   const { address, apartment, province, country } = useSelector((state: RootState) => state.customer.shippingInformation)
    const { contactInformation } = useSelector((state: RootState) => state.customer)
-   const { email, instructions } = useSelector((state: RootState) => state.shipping)
+   const { instructions } = useSelector((state: RootState) => state.shipping)
    const { orders } = useSelector((state: RootState) => state.order)
-
-   const [focused, setFocused] = useState(false)
 
    useEffect(() => {
       dispatch(setEmail(contactInformation.email))
    }, [])
    return (
       <div className='flex flex-col gap-10'>
-         <div className='flex flex-col gap-6'>
-            <div className='flex gap-4 items-center'>
-               <div className="scale-125">
-                  <Processed name="" position="" />
-               </div>
-               <h1 className='font-bold text-xl text-[#262523]'>Customer Information</h1>
-            </div>
-            <div className="text-base divide-y border rounded-sm">
-               <div className="flex items-start justify-between px-5 py-4">
-                  <span className="flex items-start gap-5">
-                     <p className="font-semibold w-20">Contact</p>
-                     <div>
-                        { focused ? (
-                           <input
-                              type="email"
-                              name="email"
-                              value={ email }
-                              onChange={ e => dispatch(setEmail(e.target.value)) }
-                              onBlur={ () => setFocused(false) }
-                              ref={ (input) => { focused && input?.focus() } }
-                              style={ { border: 'none', outline: 'none' } }
-                           />
-                        ) : (
-                           <div>{ email }</div>
-                        ) }
-                     </div>
-                  </span>
-                  <span className="text-[#bda25c] cursor-pointer" onClick={ () => setFocused(true) }>Change</span>
-               </div>
-               <div className="flex items-start justify-between p-5">
-                  <span className="flex items-start gap-5">
-                     <p className="font-semibold w-20">Shipping</p>
-                     <p className="max-w-[425px]">{ `${apartment}${apartment && ','} ${address}${address && ','} ${province}${province && ','} ${country}` }</p>
-                  </span>
-                  <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage({ stage: "customer" })) }>Change</span>
-               </div>
-            </div>
-         </div>
+         <CustomerInfo />
          <div className="flex flex-col gap-6">
             <div className='flex gap-4 items-center'>
                <div className="scale-125">

@@ -1,17 +1,21 @@
 import { useDispatch, useSelector } from "react-redux"
+import { useRouter } from "next/router"
 import { RootState } from '@/store/reducers'
 import { setContactInformation, setShippingInformation, setAsRegistered } from "@/store/reducers/customerSlice"
 import { setCheckoutStage } from "@/store/reducers/checkoutSlice"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 /**
  * A component that collects customer and basic shipping information from customer.
  * @returns {JSX.Element} The rendered checkout process.
  */
-const Customer = () => {
+const Customer = ({ checkout_id }: any) => {
+   const router = useRouter()
    const customer = useSelector((state: RootState) => state.customer)
+   const { email, name } = useSelector((state: RootState) => state.account)
    const dispatch = useDispatch()
    const [invalidInputs, setInvalidInputs] = useState<string[]>([])
+   const [customerInfoBoxDisplay, setCustomerInfoBoxDisplay] = useState(false)
    const [invalidErrortDisplay, setInvalidErrortDisplay] = useState(false)
 
    /**
@@ -72,7 +76,7 @@ const Customer = () => {
       const postal = customer.shippingInformation.postal
       const province = customer.shippingInformation.province
       const phonenumber = customer.shippingInformation.phonenumber
-      const email = customer.contactInformation.email
+      const city = customer.shippingInformation.city
       let invalid = []
       !address && invalid.push("address")
       !country && invalid.push("country")
@@ -82,51 +86,63 @@ const Customer = () => {
       !province && invalid.push("province")
       !phonenumber && invalid.push("phonenumber")
       !email && invalid.push("email")
-      if (address && country && firstname && lastname && postal && province && phonenumber && email) {
+      !city && invalid.push("city")
+      if (address && country && firstname && lastname && postal && province && phonenumber && email && city) {
          return { status: true, invalid }
       } else {
          return { status: false, invalid }
       }
    }
+   useEffect(() => {
+      if (!email && !name) {
+         setCustomerInfoBoxDisplay(true)
+      } else {
+         setCustomerInfoBoxDisplay(false)
+      }
+   }, [email, name])
    return (
       <div className='flex flex-col gap-10'>
-         {
-            !customer.contactInformation.isRegistered &&
-            <div className='flex flex-col gap-6'>
-               <div className='flex justify-between items-center'>
-                  <h1 className='font-bold text-xl text-[#262323]'>Customer Information</h1>
-                  <span className='flex text-base items-center gap-6'>
-                     <p>Already have an account?</p>
-                     <p className='text-[#BDA25c]'>Log in</p>
-                  </span>
-               </div>
-               <input className='base-input w-full' type="email" name="email" placeholder='Email Address' onChange={ handleContactInfo } style={ { border: invalidInputs.includes("email") ? "1px solid #df4545" : "" } } value={ customer.contactInformation.email } />
-               <input className='base-input w-full' type="password" placeholder="Create Password" style={ { border: invalidInputs.includes("[password]") ? "1px solid #df4545" : "" } } />
-               <span>
-                  <input className='base-checkbox' type="checkbox" name="keepUpToDate" onChange={ handleContactInfo } checked={ customer.contactInformation.keepUpToDate } />
-                  <label htmlFor="keepUpToDate" className='text-base ml-2'>
-                     Keep me up to date with news and special offers
-                  </label>
+
+         <div className='flex flex-col gap-6 overflow-y-hidden' style={ { height: customerInfoBoxDisplay ? "auto" : "0" } }>
+            <div className='flex justify-between items-center'>
+               <h1 className='font-bold text-xl text-[#262323]'>Customer Information</h1>
+               <span className='flex text-base items-center gap-6'>
+                  <p>Already have an account?</p>
+                  <p className='text-[#BDA25c] cursor-pointer' onClick={ () => {
+                     router.push(`/${checkout_id}/login`)
+                  }
+                  }>Log in</p>
                </span>
             </div>
-         }
+            <input className='base-input w-full' type="email" name="email" placeholder='Email Address' onChange={ handleContactInfo } style={ { border: invalidInputs.includes("email") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.contactInformation.email } />
+            <input className='base-input w-full' type="password" placeholder="Create Password" style={ { border: invalidInputs.includes("[password]") ? "1px solid #df4545" : "1px solid #ced4da" } } />
+            <span>
+               <input className='base-checkbox' type="checkbox" name="keepUpToDate" onChange={ handleContactInfo } checked={ customer.contactInformation.keepUpToDate } />
+               <label htmlFor="keepUpToDate" className='text-base ml-2'>
+                  Keep me up to date with news and special offers
+               </label>
+            </span>
+         </div>
          <div className="flex flex-col gap-6">
             <h1 className='font-bold text-xl text-[#262523]'>Shipping Address</h1>
             <div className='flex justify-between gap-5 items-center'>
-               <input type="text" name="firstname" className='base-input w-full' placeholder='First name' onChange={ handleShippingInfo } style={ { border: invalidInputs.includes("firstname") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.firstname } />
-               <input type="text" name="lastname" onChange={ handleShippingInfo } placeholder='Last name' className='base-input w-full' style={ { border: invalidInputs.includes("lastname") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.lastname } />
-            </div>
-            <input type="text" name="company" onChange={ handleShippingInfo } className='base-input' placeholder='Company (optional)' />
-            <div className='flex justify-between gap-5 items-center'>
-               <input type="text" placeholder='Country' name="country" onChange={ handleShippingInfo } className='base-input' style={ { border: invalidInputs.includes("country") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.country } />
-               <input type="text" name="province" onChange={ handleShippingInfo } placeholder='State / Province' className='base-input max-w-[180px]' style={ { border: invalidInputs.includes("province") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.province } />
-               <input type="text" name="postal" onChange={ handleShippingInfo } placeholder='Zip / Postal' className='base-input max-w-[130px]' style={ { border: invalidInputs.includes("postal") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.postal } />
+               <input type="text" name="firstname" className='base-input w-full' placeholder='First name' onChange={ handleShippingInfo } style={ { border: invalidInputs.includes("firstname") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.firstname } />
+               <input type="text" name="lastname" onChange={ handleShippingInfo } placeholder='Last name' className='base-input w-full' style={ { border: invalidInputs.includes("lastname") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.lastname } />
             </div>
             <div className='flex justify-between gap-5 items-center'>
-               <input type="text" name="address" onChange={ handleShippingInfo } placeholder='Address' className='base-input w-full' style={ { border: invalidInputs.includes("address") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.address } />
+               <input type="text" placeholder='City' name="city" onChange={ handleShippingInfo } className='base-input' value={ customer.shippingInformation.city } style={ { border: invalidInputs.includes("company") ? "1px solid #df4545" : "1px solid #ced4da" } } />
+               <input type="text" name="company" onChange={ handleShippingInfo } placeholder='Company (optional)' className='base-input w-full' value={ customer.shippingInformation.company } />
+            </div>
+            <div className='flex justify-between gap-5 items-center'>
+               <input type="text" placeholder='Country' name="country" onChange={ handleShippingInfo } className='base-input flex-1' style={ { border: invalidInputs.includes("country") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.country } />
+               <input type="text" name="province" onChange={ handleShippingInfo } placeholder='State / Province' className='base-input max-w-[180px]' style={ { border: invalidInputs.includes("province") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.province } />
+               <input type="text" name="postal" onChange={ handleShippingInfo } placeholder='Zip / Postal' className='base-input max-w-[130px]' style={ { border: invalidInputs.includes("postal") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.postal } />
+            </div>
+            <div className='flex justify-between gap-5 items-center'>
+               <input type="text" name="address" onChange={ handleShippingInfo } placeholder='Address' className='base-input w-full' style={ { border: invalidInputs.includes("address") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.address } />
                <input type="text" placeholder='Apt, etc. (optional)' name="apartment" onChange={ handleShippingInfo } className='base-input' value={ customer.shippingInformation.apartment } />
             </div>
-            <input type="tel" name="phonenumber" onChange={ handleShippingInfo } placeholder='Phone number' className='base-input' style={ { border: invalidInputs.includes("phonenumber") ? "1px solid #df4545" : "" } } value={ customer.shippingInformation.phonenumber } />
+            <input type="tel" name="phonenumber" onChange={ handleShippingInfo } placeholder='Phone number' className='base-input' style={ { border: invalidInputs.includes("phonenumber") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.shippingInformation.phonenumber } />
             <span>
                <input type="checkbox" name="saveShippingInfo" onChange={ handleShippingInfo } checked={ customer.shippingInformation.saveShippingInfo } />
                <label htmlFor="saveShippingInfo" className='text-base ml-2'>

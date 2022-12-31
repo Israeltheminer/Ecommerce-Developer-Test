@@ -6,6 +6,7 @@ import Customer from "@/components/checkout/Customer"
 import Shipping from "@/components/checkout/Shipping"
 import Payment from "@/components/checkout/Payment"
 import Summary from "@/components/checkout/Summary"
+import Thanks from "@/components/checkout/Thanks"
 import { useSelector } from "react-redux"
 import { RootState } from '@/store/reducers'
 
@@ -14,17 +15,17 @@ import { RootState } from '@/store/reducers'
  * A component that displays the checkout process for an online store.
  * @returns {JSX.Element} The rendered checkout process.
  */
-const Checkout = () => {
+const Checkout = ({ checkout_id }: any) => {
+
    /**
    * The current stage of the checkout process.
    * @type {string}
    */
    const stage = useSelector((state: RootState) => state.checkout.stage)
-
    return (
       <Main meta={ <Meta title="The Hardware Store | Checkout" description="Checkout page" /> }>
          <div className="flex">
-            <div className='bg-white py-16 px-28 flex flex-col items-stretch mb-auto grow'>
+            <div className='bg-white py-16 px-[7.5%] flex flex-col items-stretch mb-auto grow '>
                <div className='mx-auto mb-16'>
                   <Image src="/assets/images/logo.svg" width={ 400 } height={ 300 } alt="logo" />
                </div>
@@ -33,11 +34,11 @@ const Checkout = () => {
                      <CheckoutStatusBar stage={ stage } />
                   </div>
                   {
-                     stage === "customer" ? <Customer /> : stage === "shipping" ? <Shipping /> : stage === "payment" ? <Payment /> : <Customer />
+                     stage === "customer" ? <Customer checkout_id={ checkout_id } /> : stage === "shipping" ? <Shipping /> : stage === "payment" ? <Payment /> : stage === "thanks" && <Thanks checkout_id={ checkout_id } />
                   }
                </div>
             </div>
-            <div className='bg-[#f0e9e2] py-16 px-[6%] max-w-600px'>
+            <div className='bg-[#f0e9e2] py-16 px-[6%] max-w-600px hidden lg:block overflow-hidden'>
                <Summary stage={ stage } />
             </div>
          </div>
@@ -46,3 +47,11 @@ const Checkout = () => {
 }
 
 export default Checkout
+
+export async function getServerSideProps (context: any) {
+   return {
+      props: {
+         checkout_id: context.query.slug,
+      }
+   }
+}

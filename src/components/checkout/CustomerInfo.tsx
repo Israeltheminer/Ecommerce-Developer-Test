@@ -8,10 +8,10 @@ import { setCheckoutStage } from "@/store/reducers/checkoutSlice"
 
 const CustomerInfo = () => {
    const dispatch = useDispatch()
-   const { address, apartment, province, country } = useSelector((state: RootState) => state.customer.shippingInformation)
+   const { address, apartment, province, country, city } = useSelector((state: RootState) => state.customer.shippingInformation)
    const stage = useSelector((state: RootState) => state.checkout.stage)
-   const { email } = useSelector((state: RootState) => state.shipping)
-   const { orders } = useSelector((state: RootState) => state.order)
+   const { email } = useSelector((state: RootState) => state.account)
+   const { orders } = useSelector((state: RootState) => state.shipping)
    const [focused, setFocused] = useState(false)
    return (
       <div className='flex flex-col gap-6'>
@@ -46,7 +46,7 @@ const CustomerInfo = () => {
             <div className="flex items-start justify-between p-5">
                <span className="flex items-start gap-5">
                   <p className="font-semibold w-20">Shipping</p>
-                  <p className="max-w-[425px]">{ `${apartment}${apartment && ','} ${address}${address && ','} ${province}${province && ','} ${country}` }</p>
+                  <p className="max-w-[425px]">{ `${apartment} ${address}${address && ','} ${city}${city && ','} ${province}${province && ','} ${country}` }</p>
                </span>
                <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage({ stage: "customer" })) }>Change</span>
             </div>
@@ -56,11 +56,11 @@ const CustomerInfo = () => {
                      <p className="font-semibold w-20">Method</p>
                      <ul className="max-w-[200px] text-[15px]" style={ { margin: "0" } }>
                         {
-                           (Object.freeze(orders).slice().sort((a, b) => parseInt(b.id) - parseFloat(a.id))).map(({ id, shipping }) =>
+                           orders?.map(({ id, shipping }) =>
                               <li key={ `${id}` }>
                                  <span className="text-capitalize">{
                                     shipping.split(' ')
-                                       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                                       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
                                        .join(' ') }</span> shipping
                               </li>
                            )
@@ -71,10 +71,10 @@ const CustomerInfo = () => {
                </div>
             }
          </div>
-         { stage === "payment" &&
+         { (stage === "payment" && orders.length > 0) &&
             <div className="bg-[#f0e9e2] rounded-sm px-9 py-3 flex items-center gap-8">
                <Image src="/assets/images/delivery.svg" alt="van" style={ { width: "auto", height: "auto" } } width={ 58 } height={ 38 } />
-               <p className="text-[14px] font-semibold">Please note your order has been split into 2 deliveries</p>
+               <p className="text-[14px] font-semibold">Please note your order has been split into { orders.length } deliveries</p>
             </div>
          }
       </div>

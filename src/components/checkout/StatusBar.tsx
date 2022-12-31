@@ -21,7 +21,7 @@ const Processed = ({ name, position }: { name: string; position: string }) => {
    return (
       <div className="flex flex-col" style={ { alignItems: position } }>
          <div className="w-5 h-5 z-30 bg-[#262523] rounded-full flex items-center justify-center">
-            <Image src="/assets/images/mark.svg" width={ 12 } height={ 12 } alt="mark" />
+            <Image src="/assets/images/mark.svg" alt="mark" width="12" height="12" />
          </div>
          <div className="text-base font-medium text-gray-700 relative" style={ { right: position === "start" ? "30%" : "auto", left: position === "end" ? "30%" : "auto" } }>{ name }</div>
       </div>

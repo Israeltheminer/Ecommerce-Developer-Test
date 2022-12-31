@@ -1,20 +1,36 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from '@/store/reducers'
 import { setCheckoutStage } from "@/store/reducers/checkoutSlice"
-import { setEmail, setInstructions } from "@/store/reducers/shippingSlice"
-import { changeShipping } from "@/store/reducers/orderSlice"
+import { setEmail, setInstructions, setOrders, changeShipping } from "@/store/reducers/shippingSlice"
 import { Current } from "@/components/checkout/StatusBar"
 import { useEffect } from "react"
 import CustomerInfo from "./CustomerInfo"
+import swell from "swell-js"
 
 const Shipping = () => {
    const dispatch = useDispatch()
    const { contactInformation } = useSelector((state: RootState) => state.customer)
-   const { instructions } = useSelector((state: RootState) => state.shipping)
-   const { orders } = useSelector((state: RootState) => state.order)
+   const { instructions, orders } = useSelector((state: RootState) => state.shipping)
+
+   swell.init(
+      process.env.NEXT_PUBLIC_SWELL_STORE as string,
+      process.env.NEXT_PUBLIC_SWELL_API_TOKEN as string
+   )
 
    useEffect(() => {
       dispatch(setEmail(contactInformation.email))
+      async function getCartItems () {
+         try {
+            const { items } = await swell.cart.get()
+            const extractId = items.map(({ id, product, quantity }) => {
+               return { id, shipping: "standard", quantity, name: product.name }
+            })
+            dispatch(setOrders(extractId))
+         } catch (error) {
+            console.log(error)
+         }
+      }
+      getCartItems()
    }, [])
    return (
       <div className='flex flex-col gap-10'>
@@ -28,12 +44,12 @@ const Shipping = () => {
             </div>
             <div className="flex flex-col gap-8">
                {/* To fix the type error from dissallowing the sort method, the array is first freezed, sliced and finally sorted */ }
-               { (Object.freeze(orders).slice().sort((a, b) => parseInt(b.id) - parseFloat(a.id))).map((order, index) => (
+               { orders?.map((order, index) => (
                   <div className="flex flex-col gap-5" key={ `${order.id}` }>
 
-                     <h1 className="text-[#BDA25C] text-xl font-bold ">Delivery { index + 1 } of 2</h1>
-                     <span className="relative py-2 max-w-[125px] px-6 border border-[#BDA25C] rounded-sm text-[#BDA25C] font-bold text-lg text-center">
-                        <span className='rounded-full p-1 text-sm w-6 h-6 bg-[#BDA25C] text-white absolute top-[-12px] right-[-12px] flex justify-center items-center'>1</span>Item { index + 1 }</span>
+                     <h1 className="text-[#BDA25C] text-xl font-bold ">Delivery { index + 1 } of { orders.length }</h1>
+                     <span className="relative py-2 max-w-[165px] px-6 border border-[#BDA25C] rounded-sm text-[#BDA25C] font-bold text-base text-center">
+                        <span className='rounded-full p-1 text-sm w-6 h-6 bg-[#BDA25C] text-white absolute top-[-12px] right-[-12px] flex justify-center items-center'>{ order.quantity }</span>{ order.name }</span>
                      <div className="w-full text-base flex flex-col gap-2 font-semibold">
                         <span className="rounded-sm py-4 px-5 flex items-center justify-between bg-[#BDA25c] text-white">
                            <div className="flex items-center gap-6">

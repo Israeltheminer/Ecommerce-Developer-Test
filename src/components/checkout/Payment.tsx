@@ -3,7 +3,9 @@ import Image from 'next/image'
 import { useDispatch, useSelector } from "react-redux"
 import cardValidator from "card-validator"
 import { Current } from "@/components/checkout/StatusBar"
+import { getCards, addCardToVault, addCardToCart } from "@/services/cardService"
 import CustomerInfo from "./CustomerInfo"
+import swell from "swell-js"
 
 import { RootState } from '@/store/reducers'
 import { setCheckoutStage } from "@/store/reducers/checkoutSlice"
@@ -16,9 +18,15 @@ interface IValidInputs {
    expiry: { isPotentiallyValid: boolean, isValid: boolean }
 }
 
+swell.init(
+   process.env.NEXT_PUBLIC_SWELL_STORE as string,
+   process.env.NEXT_PUBLIC_SWELL_API_TOKEN as string
+)
+
 const Payment = () => {
    const dispatch = useDispatch()
    const { agreedToTerms, billingAddress, cardDetails, paymentMethod } = useSelector((state: RootState) => state.payment)
+   const { results } = useSelector((state: RootState) => state.cards)
    const [validInputs, setValidInputs] = useState<IValidInputs>({
       number: { isPotentiallyValid: true, isValid: true },
       name: { isPotentiallyValid: true, isValid: true },
@@ -27,6 +35,13 @@ const Payment = () => {
    })
    const [focusedElement, setFocusedElement] = useState("")
    const [agreedToTermsError, setAgreedToTermsError] = useState(false)
+   const [saveCardOption, setSaveCardOption] = useState(false)
+   const [previousCardOption, setPreviousCardOption] = useState("")
+   const [paypalPaymentError, setPaypalPaymentError] = useState(false)
+   const postNewCard = async () => {
+      dispatch(addCardToVault())
+      dispatch(addCardToCart())
+   }
 
    const handleCardInputError = (name: keyof IValidInputs) => {
       return {
@@ -70,11 +85,14 @@ const Payment = () => {
          // Clear the focused element state when no element is in focus
          setFocusedElement((document.activeElement as HTMLInputElement).name)
       }
+      async function getAllCards () {
+         await dispatch(getCards())
+      }
+      getAllCards()
       const handleBlur = () => {
          // Clear the focused element state when no element is in focus
          setFocusedElement('')
       }
-
       document.addEventListener('focus', handleFocus, true)
       document.addEventListener('blur', handleBlur, true)
       return () => {
@@ -85,7 +103,33 @@ const Payment = () => {
    useEffect(() => {
       agreedToTerms && setAgreedToTermsError(() => false)
    }, [agreedToTerms])
+   const [hasCalled, setHasCalled] = useState(false)
 
+   useEffect(() => {
+      if (!hasCalled) {
+         swell.payment.createElements({
+            paypal: {
+               elementId: '#paypal-button',
+               style: {
+                  layout: 'vertical',
+                  color: 'blue',
+                  shape: 'rect',
+                  label: 'buynow',
+                  tagline: false,
+               },
+               onSuccess: async () => {
+                  await swell.cart.submitOrder()
+                  dispatch(setCheckoutStage({ stage: "thanks" }))
+               },
+               onError: (error: any) => {
+                  setPaypalPaymentError(() => true)
+                  console.error(error.message)
+               },
+            },
+         })
+         setHasCalled(() => true)
+      }
+   }, [])
    return (
       <div className='flex flex-col gap-10'>
          <CustomerInfo />
@@ -113,7 +157,7 @@ const Payment = () => {
                            <Image src="/assets/images/amex.svg" alt="van" style={ { height: "auto" } } width={ 40 } height={ 44 } />
                         </span>
                      </div>
-                     { paymentMethod === "creditCard" &&
+                     { (paymentMethod === "creditCard" && !previousCardOption) &&
                         <div className="flex flex-col gap-5 px-7 py-4">
                            <input type="text" name="number" pattern="[0-9 ]{4} [0-9 ]{4} [0-9 ]{4} [0-9 ]{4}" id="cardNumber" className="base-input" placeholder="Credit card number" onChange={ handleCardDetailChange } value={ cardDetails.number } style={ handleCardInputError("number") } />
                            <input type="text" name="name" id="cardName" className="base-input" placeholder="Name on Card" onChange={ handleCardDetailChange } value={ cardDetails.name } style={ handleCardInputError("name") } />
@@ -121,13 +165,38 @@ const Payment = () => {
                               <input type="text" name="expiry" id="expiry" className="base-input w-full" placeholder="MM /YY" onChange={ handleCardDetailChange } value={ cardDetails.expiry } style={ handleCardInputError("expiry") } />
                               <input type="text" name="code" id="code" className="base-input w-full" placeholder="Security code" onChange={ handleCardDetailChange } value={ cardDetails.code } style={ handleCardInputError("code") } />
                            </div>
+                           <label htmlFor="saveCard" className="self-start text-[15px] font-semibold" >
+                              <input type="checkbox" name="saveCard" id="saveCard" className="mr-2" onChange={ (e) => setSaveCardOption(() => e.target.checked) } checked={ saveCardOption } />
+                              Add Card to vault
+                           </label>
+                        </div>
+                     }
+                     { (paymentMethod === "creditCard") &&
+                        <div className="flex flex-col px-7 divide-y">
+                           {
+                              results?.map(({ token, brand, last4, exp_month, exp_year }: { token: string; brand: string; last4: string; exp_month: number; exp_year: number }, key: string) => (
+                                 <div className="flex justify-start items-center gap-6 font-semibold text-sm py-3" key={ key }>
+                                    <input type="radio" name="previousCardOption" value={ token } checked={ previousCardOption === token } onClick={ (e) => {
+                                       e.currentTarget.value === previousCardOption && setPreviousCardOption("")
+                                    } } onChange={ (e) => {
+                                       setPreviousCardOption(() => e.target.value)
+                                    } } />
+                                    <p>XXXX XXXX XXXX XXXX { last4 }</p>
+                                    <p>{ exp_month } / { exp_year }</p>
+                                    <p>{ brand }</p>
+                                 </div>
+                              )) }
                         </div>
                      }
                   </div>
                   <div className="flex items-center gap-7 h-[60px] px-7">
                      <input type="radio" className="dark-radio-input" name="paymentMethod" value="paypal" checked={ paymentMethod === "paypal" } onChange={ () => dispatch(setPaymentMethod("paypal")) } />
-
-                     <Image src="/assets/images/PayPal.svg" alt="van" style={ { height: "auto" } } width={ 70 } height={ 40 } />
+                     <Image src="/assets/images/PayPal.svg" alt="van" style={ { height: "auto" } } width={ 80 } height={ 44 } />
+                  </div>
+                  <div style={ { height: paymentMethod === "paypal" ? "192px" : "0", overflow: "hidden", padding: paymentMethod === "paypal" ? "28px 28px 0" : "0", marginBottom: paymentMethod === "paypal" ? "28px" : "0" } }>
+                     {
+                        <div id="paypal-button" ></div>
+                     }
                   </div>
                   <div className="flex justify-between items-center h-[60px] px-7">
                      <span className="flex items-center gap-7">
@@ -164,7 +233,22 @@ const Payment = () => {
             <span className='font-bold text-lg text-[#BDA25C] cursor-pointer' onClick={ () => dispatch(setCheckoutStage({ stage: "shipping" })) }>Back</span>
             <button className='bg-[#BDA25C] min-w-[260px] py-3 px-9 rounded-sm text-white font-bold text-lg' onClick={ () => {
                if (agreedToTerms) {
-                  paymentMethod === "creditCard" && !validateCardInputs() ? dispatch(setCheckoutStage({ stage: "thanks" })) : paymentMethod !== "creditCard" && dispatch(setCheckoutStage({ stage: "thanks" }))
+                  switch (paymentMethod) {
+                     case "creditCard":
+                        // !validateCardInputs() && dispatch(setCheckoutStage({ stage: "thanks" }))
+                        if (!validateCardInputs()) {
+                           saveCardOption && postNewCard()
+                        }
+                        break
+                     case "paypal":
+                        dispatch(setCheckoutStage({ stage: "thanks" }))
+                        break
+                     case "bankTransfer":
+                        dispatch(setCheckoutStage({ stage: "thanks" }))
+                        break
+                     default:
+                        break
+                  }
                } else {
                   setAgreedToTermsError(() => true)
                }

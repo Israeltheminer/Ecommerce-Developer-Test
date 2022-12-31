@@ -1,14 +1,24 @@
-import { configureStore, Middleware, Store } from "@reduxjs/toolkit"
-import { createLogger } from "redux-logger"
+import { configureStore, Middleware, getDefaultMiddleware, Store } from "@reduxjs/toolkit"
 import rootReducer from "@/store/reducers"
+import thunkMiddleware from "redux-thunk"
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
+import storage from "redux-persist/lib/storage"
 
-const middleware: Middleware[] = []
-
-if (process.env.NODE_ENV !== "production") {
-	middleware.push(createLogger())
+const persistConfig = {
+	key: "root",
+	storage
 }
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store: Store = configureStore({
-	reducer: rootReducer,
-	middleware
+	reducer: persistedReducer,
+	middleware: [
+		thunkMiddleware,
+		...getDefaultMiddleware({
+			serializableCheck: {
+				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+			}
+		})
+	]
 })
+export const persistor = persistStore(store)

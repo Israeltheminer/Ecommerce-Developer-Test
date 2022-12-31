@@ -6,6 +6,7 @@ interface ShippingInfo {
 	company: string
 	country: string
 	province: string
+	city: string
 	postal: string
 	address: string
 	apartment: string
@@ -34,6 +35,7 @@ const initialState: CustomerState = {
 		firstname: "",
 		lastname: "",
 		company: "",
+		city: "",
 		country: "",
 		province: "",
 		postal: "",

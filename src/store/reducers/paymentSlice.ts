@@ -25,7 +25,7 @@ const initialState: PaymentState = {
 }
 
 const PaymentSlice = createSlice({
-	name: "shipping",
+	name: "payment",
 	initialState,
 	reducers: {
 		setPaymentMethod(state: PaymentState, action: PayloadAction<"creditCard" | "paypal" | "bankTransfer">) {

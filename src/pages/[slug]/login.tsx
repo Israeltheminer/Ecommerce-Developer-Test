@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swell from "swell-js"
 import { useDispatch } from "react-redux"
 import { setAccountDetails } from '@/store/reducers/accountSlice'
+import { setCheckoutId } from '@/store/reducers/checkoutSlice'
 import Image from 'next/image'
 
 const Login: React.FC = ({ checkout_id }: any) => {
@@ -37,6 +38,9 @@ const Login: React.FC = ({ checkout_id }: any) => {
       // TODO: Add code to redirect the user to the reset password page
       router.push(`/${checkout_id}/reset-password`)
    }
+   useEffect(() => {
+      dispatch(setCheckoutId(checkout_id))
+   }, [])
 
    return (
       <form

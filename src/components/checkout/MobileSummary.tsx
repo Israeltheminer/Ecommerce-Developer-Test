@@ -13,9 +13,10 @@ swell.init(
 )
 /**
  * Displays a summary of the items in the user's cart, including the total cost and any applied discounts.
+ * Only visible on mobile device or smaller screens
  * @returns {JSX.Element} The component to be rendered.
  */
-const Summary = ({ stage }: any) => {
+const MobileSummary = ({ stage }: any) => {
    const dispatch = useDispatch()
    const [currency, setCurrency] = useState("USD")
    const [currencySwitchBoxDisplay, setCurrencySwitchBoxDisplay] = useState(false)
@@ -52,13 +53,16 @@ const Summary = ({ stage }: any) => {
       <div className='border rounded-sm w-full mb-3 px-4 py-2 flex lg:hidden justify-between items-center'>
          <span className='text-sm text-[#BDA25C] font-medium flex items-center gap-2'>
             <p>Order Summary ({ item_quantity } { item_quantity > 1 ? "items" : "item" })</p>
-            <svg viewBox="0 0 512 512" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 512 512" className={ `h-5 w-5 cursor-pointer transition-all ease-in-out ${summaryDisplay ? ' rotated' : ''}` } onClick={ () => setSummaryDisplay((prev) => !prev) }><path d="m256 298.3 174.2-167.2c4.3-4.2 11.4-4.1 15.8.2l30.6 29.9c4.4 4.3 4.5 11.3.2 15.5L264.1 380.9c-2.2 2.2-5.2 3.2-8.1 3-3 .1-5.9-.9-8.1-3L35.2 176.7c-4.3-4.2-4.2-11.2.2-15.5L66 131.3c4.4-4.3 11.5-4.4 15.8-.2L256 298.3z" fill="#bda25c" className="fill-000000"></path></svg>
+            <svg viewBox="0 0 512 512" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 512 512" className={ `h-5 w-5 cursor-pointer transition-all ease-in-out ${summaryDisplay ? ' rotated' : ''}` } onClick={ () => setSummaryDisplay((prev) => !prev) }><path d="m256 298.3 174.2-167.2c4.3-4.2 11.4-4.1 15.8.2l30.6 29.9c4.4 4.3 4.5 11.3.2 15.5L264.1 380.9c-2.2 2.2-5.2 3.2-8.1 3-3 .1-5.9-.9-8.1-3L35.2 176.7c-4.3-4.2-4.2-11.2.2-15.5L66 131.3c4.4-4.3 11.5-4.4 15.8-.2L256 298.3z" fill="#bda25c" className="fill-000000"></path></svg>
          </span>
          <span className='flex justify-between items-center relative gap-4'>
-            <p className='text-sm opacity-80 hover:border-gray-400 hover:border border hover:font-semibold cursor-pointer rounded-lg py-2 px-5' onClick={ () => {
-               setCurrencySwitchBoxDisplay((prev) => !prev)
-            } }>{ currency }</p>
-            { currencySwitchBoxDisplay &&
+            {
+               stage !== "thanks" &&
+               <p className='text-sm opacity-80 hover:border-gray-400 hover:border border hover:font-semibold cursor-pointer rounded-lg py-2 px-5' onClick={ () => {
+                  setCurrencySwitchBoxDisplay((prev) => !prev)
+               } }>{ currency }</p>
+            }
+            { (currencySwitchBoxDisplay && stage !== "thanks") &&
                <ul className='bg-white absolute left-0 top-[30px] divide-y rounded-lg border'>
                   { currency !== "USD" && <li className='px-6 py-2 text-sm font-semibold cursor-pointer hover:bg-gray-200' onClick={ () => handleCurrencySwitch("USD") }>USD</li> }
                   { currency !== "AUD" && <li className='px-6 py-2 text-sm font-semibold cursor-pointer hover:bg-gray-200' onClick={ () => handleCurrencySwitch("AUD") }>AUD</li> }
@@ -106,4 +110,4 @@ const Summary = ({ stage }: any) => {
    )
 }
 
-export default Summary
+export default MobileSummary

@@ -6,10 +6,10 @@ import Customer from "@/components/checkout/Customer"
 import Shipping from "@/components/checkout/Shipping"
 import Payment from "@/components/checkout/Payment"
 import Summary from "@/components/checkout/Summary"
+import MobileSummary from "@/components/checkout/MobileSummary"
 import Thanks from "@/components/checkout/Thanks"
 import { useSelector } from "react-redux"
 import { RootState } from '@/store/reducers'
-
 
 /**
  * A component that displays the checkout process for an online store.
@@ -19,9 +19,10 @@ const Checkout = ({ checkout_id }: any) => {
 
    /**
    * The current stage of the checkout process.
-   * @type {string}
+   * @type {"customer" | "shipping" | "payment" | "thanks"}
    */
    const stage = useSelector((state: RootState) => state.checkout.stage)
+
    return (
       <Main meta={ <Meta title="The Hardware Store | Checkout" description="Checkout page" /> }>
          <div className="flex">
@@ -33,13 +34,16 @@ const Checkout = ({ checkout_id }: any) => {
                   <div className="progress">
                      <CheckoutStatusBar stage={ stage } />
                   </div>
+                  <div className='flex flex-col items-center lg:hidden'>
+                     <MobileSummary stage={ stage } mobile={ true } />
+                  </div>
                   {
                      stage === "customer" ? <Customer checkout_id={ checkout_id } /> : stage === "shipping" ? <Shipping /> : stage === "payment" ? <Payment /> : stage === "thanks" && <Thanks checkout_id={ checkout_id } />
                   }
                </div>
             </div>
             <div className='bg-[#f0e9e2] py-16 px-[6%] max-w-600px hidden lg:block overflow-hidden'>
-               <Summary stage={ stage } />
+               <Summary stage={ stage } mobile={ false } />
             </div>
          </div>
       </Main>

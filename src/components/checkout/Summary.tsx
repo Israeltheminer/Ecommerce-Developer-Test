@@ -1,16 +1,21 @@
 import { RootState } from '@/store/reducers'
 import { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import swell from "swell-js"
 import { getCart } from "@/services/orderService"
 import OrderSummaryItem from '../order_summary_item'
 import { getPrice } from '@/utils/product'
 
+swell.init(
+   process.env.NEXT_PUBLIC_SWELL_STORE as string,
+   process.env.NEXT_PUBLIC_SWELL_API_TOKEN as string
+)
 /**
  * Displays a summary of the items in the user's cart, including the total cost and any applied discounts.
  * @returns {JSX.Element} The component to be rendered.
  */
-const Summary = ({ stage }: { stage: string }) => {
+const Summary = ({ stage }: any) => {
    const dispatch = useDispatch()
    const [currency, setCurrency] = useState("USD")
    const [currencySwitchBoxDisplay, setCurrencySwitchBoxDisplay] = useState(false)
@@ -18,14 +23,11 @@ const Summary = ({ stage }: { stage: string }) => {
       setCurrency(() => name)
       setCurrencySwitchBoxDisplay(() => false)
    }
-   const { tax_total, sub_total, item_discount, shipment_total, grand_total, items } = useSelector((state: RootState) => state.order)
+   const { tax_total, sub_total, item_discount, shipment_total, grand_total, item_quantity, items } = useSelector((state: RootState) => state.order)
    const [price, setPrice] = useState({
       tax_total: getPrice(tax_total, currency), sub_total: getPrice(sub_total, currency), item_discount: getPrice(item_discount, currency), shipment_total: getPrice(shipment_total, currency), grand_total: getPrice(grand_total, currency)
    })
-   swell.init(
-      process.env.NEXT_PUBLIC_SWELL_STORE as string,
-      process.env.NEXT_PUBLIC_SWELL_API_TOKEN as string
-   )
+
    useEffect(() => {
       async function selectCurrency () {
          const currency = swell.currency.selected()
@@ -45,11 +47,20 @@ const Summary = ({ stage }: { stage: string }) => {
       }
       refreshData()
    }, [currency])
-   return (
-      <div className='w-[330px] grid grid-cols-1 divide-y divide-[#262523]'>
+
+   return (<>
+      <div className='border rounded-sm w-full mb-3 px-4 py-4 flex lg:hidden justify-between items-center'>
+         <span className='text-sm text-[#BDA25C] font-medium flex items-center gap-2'>
+            <p>Order Summary ({ item_quantity } { item_quantity > 1 ? "items" : "item" })</p>
+            <svg viewBox="0 0 512 512" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 512 512" className='h-5 w-5 cursor-pointer'><path d="m256 298.3 174.2-167.2c4.3-4.2 11.4-4.1 15.8.2l30.6 29.9c4.4 4.3 4.5 11.3.2 15.5L264.1 380.9c-2.2 2.2-5.2 3.2-8.1 3-3 .1-5.9-.9-8.1-3L35.2 176.7c-4.3-4.2-4.2-11.2.2-15.5L66 131.3c4.4-4.3 11.5-4.4 15.8-.2L256 298.3z" fill="#bda25c" className="fill-000000"></path></svg>
+         </span>
+         <p className='text-base'>{ price.grand_total }</p>
+      </div>
+
+      <div className='w-[330px] grid-cols-1 divide-y divide-[#262523] overflow-hidden' >
          <div>
             <h1 className='font-bold mb-2 text-xl'>Order Summary</h1>
-            <div className="">
+            <div>
                { items?.map((e: any, key: string) => (
                   <OrderSummaryItem key={ key } { ...e } stage={ stage } currency={ currency } totalItems={ items.length } itemIndex={ key } />
                )) }
@@ -82,10 +93,13 @@ const Summary = ({ stage }: { stage: string }) => {
                <p className='text-sm'>{ `Including ${price.tax_total} in taxes` }</p>
             </span>
             <span className='flex justify-between items-center relative gap-4'>
-               <p className='text-base opacity-80 hover:border-gray-400 hover:border border hover:font-semibold cursor-pointer rounded-lg py-2 px-5' onClick={ () => {
-                  setCurrencySwitchBoxDisplay((prev) => !prev)
-               } }>{ currency }</p>
-               { currencySwitchBoxDisplay &&
+               {
+                  stage !== "thanks" &&
+                  <p className='text-base opacity-80 hover:border-gray-400 hover:border border hover:font-semibold cursor-pointer rounded-lg py-2 px-5' onClick={ () => {
+                     setCurrencySwitchBoxDisplay((prev) => !prev)
+                  } }>{ currency }</p>
+               }
+               { (currencySwitchBoxDisplay && stage !== "thanks") &&
                   <ul className='bg-white absolute left-0 top-[30px] divide-y rounded-lg'>
                      { currency !== "USD" && <li className='px-6 py-2 text-base font-semibold cursor-pointer hover:bg-gray-200' onClick={ () => handleCurrencySwitch("USD") }>USD</li> }
                      { currency !== "AUD" && <li className='px-6 py-2 text-base font-semibold cursor-pointer hover:bg-gray-200' onClick={ () => handleCurrencySwitch("AUD") }>AUD</li> }
@@ -97,8 +111,8 @@ const Summary = ({ stage }: { stage: string }) => {
          </div>
          { stage === "thanks" && <>
 
-            <div className="relative mt-10 text-black">
-               <h3 className="mb-5 text-lg font-bold">Support</h3>
+            <div className="relative  text-black">
+               <h3 className="my-5 text-lg font-bold">Support</h3>
                <p className="text-sm font-semibold">
                   +01 234 456 789 <span className="font-light">(International)</span>
                </p>
@@ -109,8 +123,8 @@ const Summary = ({ stage }: { stage: string }) => {
                   Call us now for payment related issues
                </p>
             </div>
-            <div className="relative mt-10 flex">
-               <p className="flex flex-col">
+            <div className="relative mt-5 flex">
+               <p className="flex flex-col my-5">
                   <span className="text-sm font-bold text-black">
                      Money Back Guarantee
                   </span>
@@ -122,6 +136,7 @@ const Summary = ({ stage }: { stage: string }) => {
          </>
          }
       </div>
+   </>
    )
 }
 

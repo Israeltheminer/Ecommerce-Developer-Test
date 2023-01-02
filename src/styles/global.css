@@ -11,7 +11,9 @@ a {
 .content ul {
 	@apply my-6;
 }
-
+.rotated {
+	transform: rotate(180deg);
+}
 .base-input {
 	outline: rgb(103, 103, 103);
 	border-radius: 4px;

@@ -21,4 +21,5 @@ export const store: Store = configureStore({
 		})
 	]
 })
+
 export const persistor = persistStore(store)

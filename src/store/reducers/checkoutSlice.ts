@@ -14,8 +14,8 @@ const checkoutSlice = createSlice({
 	name: "checkout",
 	initialState,
 	reducers: {
-		setCheckoutStage(state: CheckoutState, action: PayloadAction<CheckoutState>) {
-			state.stage = action.payload.stage
+		setCheckoutStage(state: CheckoutState, action: PayloadAction<"customer" | "shipping" | "payment" | "thanks">) {
+			state.stage = action.payload
 			window.scrollTo(0, 0)
 		},
 		setCheckoutId(state: CheckoutState, action: PayloadAction<string>) {

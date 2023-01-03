@@ -10,6 +10,7 @@ import MobileSummary from "@/components/checkout/MobileSummary"
 import Thanks from "@/components/checkout/Thanks"
 import { useSelector } from "react-redux"
 import { RootState } from '@/store/reducers'
+import { useEffect, useState } from 'react'
 
 /**
  * A component that displays the checkout process for an online store.
@@ -22,13 +23,16 @@ const Checkout = ({ checkout_id }: any) => {
    * @type {"customer" | "shipping" | "payment" | "thanks"}
    */
    const stage = useSelector((state: RootState) => state.checkout.stage)
-
+   const [currentStage, setCurrentStage] = useState("customer")
+   useEffect(() => {
+      setCurrentStage(() => stage)
+   }, [stage])
    return (
       <Main meta={ <Meta title="The Hardware Store | Checkout" description="Checkout page" /> }>
          <div className="flex">
             <div className='bg-white py-16 px-[7.5%] flex flex-col items-stretch mb-auto grow '>
                <div className='mx-auto mb-16'>
-                  <Image src="/assets/images/logo.svg" width={ 400 } height={ 300 } alt="logo" />
+                  <Image src="/assets/images/logo.svg" width={ 400 } height={ 300 } alt="logo" priority={ true } />
                </div>
                <div className=''>
                   <div className="progress">
@@ -38,11 +42,11 @@ const Checkout = ({ checkout_id }: any) => {
                      <MobileSummary stage={ stage } mobile={ true } />
                   </div>
                   {
-                     stage === "customer" ? <Customer checkout_id={ checkout_id } /> : stage === "shipping" ? <Shipping /> : stage === "payment" ? <Payment /> : stage === "thanks" && <Thanks checkout_id={ checkout_id } />
+                     currentStage === "customer" ? <Customer checkout_id={ checkout_id } /> : currentStage === "shipping" ? <Shipping /> : currentStage === "payment" ? <Payment /> : currentStage === "thanks" && <Thanks checkout_id={ checkout_id } />
                   }
                </div>
             </div>
-            <div className='bg-[#f0e9e2] py-16 px-[6%] max-w-600px hidden lg:block overflow-hidden'>
+            <div className='bg-[#f0e9e2] py-16 px-[5%] min-w-[450px] max-w-[600px] hidden lg:block overflow-hidden'>
                <Summary stage={ stage } mobile={ false } />
             </div>
          </div>

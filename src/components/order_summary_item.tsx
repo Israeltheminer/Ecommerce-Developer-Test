@@ -15,16 +15,21 @@ export default function OrderSummaryItem ({ product, price, variant, quantity, s
   itemIndex: string
 }) {
   const [parsedPrice, setParsedPrice] = useState(getPrice(price, currency))
+  const [checkoutStage, setCheckoutStage] = useState("")
   useEffect(() => {
     setParsedPrice(() => getPrice(price, currency))
+    setCheckoutStage(() => stage)
   }, [price])
 
   return (
     <div className='flex flex-col gap-3 py-8'>
-      <div className='flex justify-between overflow-y-hidden mb-3' style={ { height: stage !== "customer" ? "auto" : "0" } }>
-        <span className='text-lg font-bold'>Delivery { itemIndex + 1 } of { totalItems }</span>
-        <span className='text-base'>Standard Shipping</span>
-      </div>
+      {
+        checkoutStage !== "customer" &&
+        <div className='flex justify-between overflow-y-hidden mb-3'>
+          <span className='text-lg font-bold'>Delivery { itemIndex + 1 } of { totalItems }</span>
+          <span className='text-base'>Standard Shipping</span>
+        </div>
+      }
       <div className='flex items-center justify-between'>
         <div className='flex gap-6 items-center'>
           <div className='relative'>

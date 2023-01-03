@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 /**
  * Denotes the current stage of checkout.
@@ -46,25 +47,27 @@ const Unprocessed = ({ name, position }: { name: string; position: string }) => 
  * A component that displays the current stage of the checkout process.
  */
 function CheckoutStatusBar ({ stage }: { stage: string }) {
+   const [statusStage, setStatusStage] = useState("customer")
+   useEffect(() => setStatusStage(() => stage), [stage])
    return (
       <div className="py-2">
          <div className="container mx-auto px-10">
             <div className="flex justify-between items-center">
-               { stage === "customer" && (
+               { statusStage === "customer" && (
                   <>
                      <Current name={ "Customer" } position={ "start" } />
                      <Unprocessed name={ "Shipping" } position={ "center" } />
                      <Unprocessed name={ "Payment" } position={ "end" } />
                   </>
                ) }
-               { stage === "shipping" &&
+               { statusStage === "shipping" &&
                   <>
                      <Processed name={ "Customer" } position={ "start" } />
                      <Current name={ "Shipping" } position={ "center" } />
                      <Unprocessed name={ "Payment" } position={ "end" } />
                   </>
                }
-               { stage === "payment" &&
+               { statusStage === "payment" &&
                   <>
                      <Processed name={ "Customer" } position={ "start" } />
                      <Processed name={ "Shipping" } position={ "center" } />
@@ -74,7 +77,7 @@ function CheckoutStatusBar ({ stage }: { stage: string }) {
             </div>
             <div className="my-2 h-[2px] rounded-full bg-gray-200 w-full relative bottom-[42px]">
                <div
-                  className="h-[2px] rounded-full bg-[#262523]" style={ { width: stage === "customer" ? "0" : stage === "shipping" ? "50%" : stage === "payment" ? "100%" : "0", transition: 'width 0.5s ease-in-out' } }
+                  className="h-[2px] rounded-full bg-[#262523]" style={ { width: statusStage === "customer" ? "0" : statusStage === "shipping" ? "50%" : statusStage === "payment" ? "100%" : "0", transition: 'width 0.5s ease-in-out' } }
                />
             </div>
          </div>

@@ -119,11 +119,11 @@ const Payment = () => {
                },
                onSuccess: async () => {
                   await swell.cart.submitOrder()
-                  dispatch(setCheckoutStage({ stage: "thanks" }))
+                  dispatch(setCheckoutStage("thanks"))
                },
                onError: (error: any) => {
                   setPaypalPaymentError(() => true)
-                  console.error(error.message)
+                  // console.error(error.message)
                },
             },
          })
@@ -131,14 +131,14 @@ const Payment = () => {
       }
    }, [])
    return (
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-10' data-cy="Payment">
          <CustomerInfo />
          <div className="flex flex-col gap-6">
             <div className='flex gap-4 items-center'>
                <div className="scale-125">
                   <Current name="" position="" />
                </div>
-               <h1 className='font-bold text-xl text-[#262523]'>Payment Method</h1>
+               <h1 className='font-bold text-xl text-[#8f7134]'>Payment Method</h1>
             </div>
             <div className="border border-[#ced4da] rounded-sm px-7 py-3 flex items-center gap-8">
                <p className="text-base font-semibold">All transactions are secure and encrypted</p>
@@ -230,21 +230,21 @@ const Payment = () => {
             </div>
          </div>
          <div className='flex items-center justify-between'>
-            <span className='font-bold text-lg text-[#BDA25C] cursor-pointer' onClick={ () => dispatch(setCheckoutStage({ stage: "shipping" })) }>Back</span>
+            <span className='font-bold text-lg text-[#BDA25C] cursor-pointer' onClick={ () => dispatch(setCheckoutStage("shipping")) }>Back</span>
             <button className='bg-[#BDA25C] min-w-[260px] py-3 px-9 rounded-sm text-white font-bold text-lg' onClick={ () => {
                if (agreedToTerms) {
                   switch (paymentMethod) {
                      case "creditCard":
-                        // !validateCardInputs() && dispatch(setCheckoutStage({ stage: "thanks" }))
+                        // !validateCardInputs() && dispatch("thanks"))
                         if (!validateCardInputs()) {
                            saveCardOption && postNewCard()
                         }
                         break
                      case "paypal":
-                        dispatch(setCheckoutStage({ stage: "thanks" }))
+                        dispatch(setCheckoutStage("thanks"))
                         break
                      case "bankTransfer":
-                        dispatch(setCheckoutStage({ stage: "thanks" }))
+                        dispatch(setCheckoutStage("thanks"))
                         break
                      default:
                         break
@@ -252,7 +252,7 @@ const Payment = () => {
                } else {
                   setAgreedToTermsError(() => true)
                }
-            } }>Complete order</button>
+            } } name="complete-order">Complete order</button>
          </div>
       </div>
    )

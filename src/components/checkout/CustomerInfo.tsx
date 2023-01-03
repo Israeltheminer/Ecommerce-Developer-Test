@@ -11,6 +11,7 @@ const CustomerInfo = () => {
    const { address, apartment, province, country, city } = useSelector((state: RootState) => state.customer.shippingInformation)
    const stage = useSelector((state: RootState) => state.checkout.stage)
    const { email } = useSelector((state: RootState) => state.account)
+   const { contactInformation } = useSelector((state: RootState) => state.customer)
    const { orders } = useSelector((state: RootState) => state.shipping)
    const [focused, setFocused] = useState(false)
    return (
@@ -23,24 +24,24 @@ const CustomerInfo = () => {
          </div>
          <div className="text-base divide-y border rounded-sm">
             <div className="flex items-start justify-between px-5 py-4">
-               <span className="flex items-start gap-5">
+               <div className="flex items-start gap-5">
                   <p className="font-semibold w-20">Contact</p>
                   <div>
                      { focused ? (
                         <input
                            type="email"
                            name="email"
-                           value={ email }
+                           value={ email ? email : contactInformation.email }
                            onChange={ e => dispatch(setEmail(e.target.value)) }
                            onBlur={ () => setFocused(false) }
                            ref={ (input) => { focused && input?.focus() } }
                            style={ { border: 'none', outline: 'none' } }
                         />
                      ) : (
-                        <div>{ email }</div>
+                        <div>{ email ? email : contactInformation.email }</div>
                      ) }
                   </div>
-               </span>
+               </div>
                <span className="text-[#bda25c] cursor-pointer" onClick={ () => setFocused(true) }>Change</span>
             </div>
             <div className="flex items-start justify-between p-5">
@@ -48,7 +49,7 @@ const CustomerInfo = () => {
                   <p className="font-semibold w-20">Shipping</p>
                   <p className="max-w-[425px]">{ `${apartment} ${address}${address && ','} ${city}${city && ','} ${province}${province && ','} ${country}` }</p>
                </span>
-               <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage({ stage: "customer" })) }>Change</span>
+               <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage("customer")) }>Change</span>
             </div>
             { stage === "payment" &&
                <div className="flex items-center justify-between p-5">
@@ -67,7 +68,7 @@ const CustomerInfo = () => {
                         }
                      </ul>
                   </span>
-                  <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage({ stage: "shipping" })) }>Change</span>
+                  <span className="text-[#bda25c] cursor-pointer" onClick={ () => dispatch(setCheckoutStage("shipping")) }>Change</span>
                </div>
             }
          </div>

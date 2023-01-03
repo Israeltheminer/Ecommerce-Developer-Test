@@ -77,6 +77,7 @@ const Customer = ({ checkout_id }: any) => {
       const province = customer.shippingInformation.province
       const phonenumber = customer.shippingInformation.phonenumber
       const city = customer.shippingInformation.city
+      const newEmail = customer.contactInformation.email
       let invalid = []
       !address && invalid.push("address")
       !country && invalid.push("country")
@@ -85,9 +86,9 @@ const Customer = ({ checkout_id }: any) => {
       !postal && invalid.push("postal")
       !province && invalid.push("province")
       !phonenumber && invalid.push("phonenumber")
-      !email && invalid.push("email")
       !city && invalid.push("city")
-      if (address && country && firstname && lastname && postal && province && phonenumber && email && city) {
+      !email && !newEmail && invalid.push("email")
+      if (invalid.length === 0) {
          return { status: true, invalid }
       } else {
          return { status: false, invalid }
@@ -101,7 +102,7 @@ const Customer = ({ checkout_id }: any) => {
       }
    }, [email, name])
    return (
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-10' data-cy="Customer">
 
          <div className='flex flex-col gap-6 overflow-y-hidden' style={ { height: customerInfoBoxDisplay ? "auto" : "0" } }>
             <div className='flex justify-between items-center'>
@@ -115,7 +116,7 @@ const Customer = ({ checkout_id }: any) => {
                </span>
             </div>
             <input className='base-input w-full' type="email" name="email" placeholder='Email Address' onChange={ handleContactInfo } style={ { border: invalidInputs.includes("email") ? "1px solid #df4545" : "1px solid #ced4da" } } value={ customer.contactInformation.email } />
-            <input className='base-input w-full' type="password" placeholder="Create Password" style={ { border: invalidInputs.includes("[password]") ? "1px solid #df4545" : "1px solid #ced4da" } } />
+            <input name="password" className='base-input w-full' type="password" placeholder="Create Password" style={ { border: invalidInputs.includes("[password]") ? "1px solid #df4545" : "1px solid #ced4da" } } />
             <span>
                <input className='base-checkbox' type="checkbox" name="keepUpToDate" onChange={ handleContactInfo } checked={ customer.contactInformation.keepUpToDate } />
                <label htmlFor="keepUpToDate" className='text-base ml-2'>
@@ -153,11 +154,12 @@ const Customer = ({ checkout_id }: any) => {
          <div className='flex items-center justify-between'>
             <span className='font-bold text-lg text-[#BDA25C]'>Return to home</span>
             <div className="relative">
-               <button className='bg-[#BDA25C] py-3 px-9 rounded-[4px] text-white font-bold text-lg'
+               <button className='bg-[#BDA25C] py-3 px-9 rounded-[4px] text-white font-bold text-lg' name="continue-to-shipping"
                   onClick={ () => {
                      const { status, invalid } = validateCustomerInfo()
                      setInvalidInputs(invalid)
-                     status && dispatch(setCheckoutStage({ stage: "shipping" }))
+                     console.log(status, invalid)
+                     status && dispatch(setCheckoutStage("shipping"))
                      status && dispatch(setAsRegistered())
                      !status && setInvalidErrortDisplay(true)
                   } }>Continue to shipping</button>

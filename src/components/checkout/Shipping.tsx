@@ -33,7 +33,7 @@ const Shipping = () => {
       getCartItems()
    }, [])
    return (
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-10' data-cy="Shipping">
          <CustomerInfo />
          <div className="flex flex-col gap-6">
             <div className='flex gap-4 items-center'>
@@ -80,12 +80,12 @@ const Shipping = () => {
          </div>
          <div className='flex items-center justify-between'>
             <span className='font-bold text-lg text-[#BDA25C] cursor-pointer' onClick={ () => {
-               dispatch(setCheckoutStage({ stage: "customer" }))
+               dispatch(setCheckoutStage("customer"))
             } }>Back</span>
             <button className='bg-[#BDA25C] py-3 px-9 rounded-sm text-white font-bold text-lg'
                onClick={ () => {
-                  dispatch(setCheckoutStage({ stage: "payment" }))
-               } }>Continue to payment</button>
+                  dispatch(setCheckoutStage("payment"))
+               } } name="continue-to-payment">Continue to payment</button>
          </div>
       </div>
    )

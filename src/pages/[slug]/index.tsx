@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Cart } from 'swell-js'
 import swell from 'swell-js'
-
-import CheckoutForm from '@/components/form'
 import Loader from '@/components/loading'
-import OrderSummary from '@/components/order_summary'
 import { Meta } from '@/layouts/Meta'
 import { Main } from '@/templates/Main'
 
@@ -83,10 +80,8 @@ const Index = ({ checkout_id }: { checkout_id: string }) => {
                 </ul>
               </div>
 
-              <CheckoutForm />
             </div>
           </div>
-          { cart !== null && <OrderSummary { ...cart } /> }
         </div>
       </div>
     </Main>
